@@ -1,0 +1,13 @@
+{
+  "name": "@gkd-kit/template",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "dependencies": {
+    "@gkd-kit/tools": "workspace:*",
+    "@gkd-kit/define": "workspace:*"
+  },
+  "volta": {
+    "extends": "../package.json"
+  }
+}

@@ -23,7 +23,7 @@ const PrimitiveValue = {
   NullValue: { type: 'null' },
 };
 
-const allowPropertyTypes: Record<string, string> = {
+const allowPropertyTypes: Record<string, string> = /* #__PURE__ */ (() => ({
   id: PrimitiveValue.StringValue.type,
   vid: PrimitiveValue.StringValue.type,
 
@@ -51,6 +51,8 @@ const allowPropertyTypes: Record<string, string> = {
   index: PrimitiveValue.IntValue.type,
   depth: PrimitiveValue.IntValue.type,
   childCount: PrimitiveValue.IntValue.type,
-};
+}))();
 
-const allowPropertyNames = Object.keys(allowPropertyTypes);
+const allowPropertyNames = /* #__PURE__ */ (() => {
+  return Object.keys(allowPropertyTypes);
+})();

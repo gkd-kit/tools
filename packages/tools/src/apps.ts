@@ -4,15 +4,17 @@ import url from 'node:url';
 
 export const batchImportApps = async (appDir: string): Promise<RawApp[]> => {
   const files = await fs.readdir(appDir);
+  const allowedSuffix = ['.ts', '.js', '.mjs', '.mts'];
   const apps = await Promise.all(
     files.map(async (file) => {
-      if (!file.endsWith('.ts')) {
+      const suffix = allowedSuffix.find((s) => file.endsWith(s));
+      if (!suffix) {
         throw new Error(`Invalid app file: ${file}`);
       }
       const app = await import(
         url.pathToFileURL(`${appDir}/${file}`).href
       ).then((app) => app.default as RawApp);
-      if (app.id != file.substring(0, file.length - 3)) {
+      if (app.id != file.substring(0, file.length - suffix.length)) {
         throw new Error(`Invalid app id: ${app.id} in file ${file}`);
       }
       return app;

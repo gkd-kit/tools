@@ -6,7 +6,8 @@
   "types": "./dist/index.d.mts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "publishConfig": {
     "access": "public",

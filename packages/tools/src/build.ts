@@ -8,11 +8,16 @@ import { isJsonEqual } from './equal';
 export const updateDist = async (
   subscription: RawSubscription,
   distDir: string,
+  gkdFilename?: string,
+  gkdVersionFilename?: string,
 ): Promise<boolean> => {
-  const gkdFilename = distDir + '/gkd.json5';
-  const gkdVersionFilename = distDir + '/gkd.version.json5';
-  const changelogFilename = distDir + '/CHANGELOG.md';
-  const summaryFilename = distDir + '/README.md';
+  gkdFilename = gkdFilename || path.join(distDir, 'gkd.json5');
+  gkdVersionFilename =
+    gkdVersionFilename || path.join(distDir, 'gkd.version.json5');
+
+  const changelogFilename = path.join(distDir, 'CHANGELOG.md');
+  const summaryFilename = path.join(distDir, 'README.md');
+
   if (!(await fs.stat(distDir).catch(() => null))) {
     await fs.mkdir(distDir);
     console.log('Created', path.basename(distDir));

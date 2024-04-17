@@ -12,19 +12,23 @@ export const syncNpmmirror = async () => {
   });
 };
 
-const distDirDefault = () => process.cwd() + '/dist';
+const distDirDefault = (json5FilePath?: string) => {
+  if (json5FilePath) {
+    return json5FilePath;
+  } else {
+    return process.cwd() + '/dist/gkd.version.json5';
+  }
+};
 
-export const stdoutGkdVersion = async (distDir = distDirDefault()) => {
-  const version: number = JSON5.parse(
-    await fs.readFile(distDir + '/gkd.version.json5', 'utf-8'),
-  ).version;
+export const stdoutGkdVersion = async (json5FilePath?: string) => {
+  const distDir = distDirDefault(json5FilePath);
+  const { version } = JSON5.parse(await fs.readFile(distDir, 'utf-8'));
   process.stdout.write(version.toString());
 };
 
-export const updatePkgVersion = async (distDir = distDirDefault()) => {
-  const version: number = JSON5.parse(
-    await fs.readFile(distDir + '/gkd.version.json5', 'utf-8'),
-  ).version;
+export const updatePkgVersion = async (json5FilePath?: string) => {
+  const distDir = distDirDefault(json5FilePath);
+  const { version } = JSON5.parse(await fs.readFile(distDir, 'utf-8'));
   const pkgFp = process.cwd() + '/package.json';
   const pkg: typeof PkgT = JSON.parse(await fs.readFile(pkgFp, 'utf-8'));
   pkg.version = [...pkg.version.split('.').splice(0, 2), version].join('.');

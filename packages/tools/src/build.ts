@@ -4,21 +4,25 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getChangelog, getSummary } from './diff';
 import { isJsonEqual } from './equal';
+import { lazyConfig, resolveConfig } from './config';
+import type { GkdConfig } from './config';
 
-export const updateDist = async (
+/**
+ * @param config - default: `'dist'` or `{outDir: 'dist'}`
+ */
+export async function updateDist(
   subscription: RawSubscription,
-  distDir: string,
-): Promise<boolean> => {
-  const gkdFilename = distDir + '/gkd.json5';
-  const gkdVersionFilename = distDir + '/gkd.version.json5';
-  const changelogFilename = distDir + '/CHANGELOG.md';
-  const summaryFilename = distDir + '/README.md';
-  if (!(await fs.stat(distDir).catch(() => null))) {
-    await fs.mkdir(distDir);
-    console.log('Created', path.basename(distDir));
+  config?: GkdConfig | string,
+): Promise<boolean> {
+  const defaultConfig =
+    config === undefined ? await lazyConfig() : resolveConfig(config);
+
+  if (!(await fs.stat(defaultConfig.outDir).catch(() => null))) {
+    await fs.mkdir(defaultConfig.outDir);
+    console.log('Created', path.basename(defaultConfig.outDir));
   }
   const oldSubscription = await fs
-    .readFile(gkdFilename, 'utf-8')
+    .readFile(defaultConfig.file, 'utf-8')
     .then((text) => JSON5.parse<RawSubscription>(text))
     .catch(() => null);
 
@@ -36,23 +40,23 @@ export const updateDist = async (
   }
 
   await fs.writeFile(
-    changelogFilename,
+    defaultConfig.changelog,
     getChangelog(oldSubscription, subscription) ||
       `# ${subscription.name}\nno changes\n`,
   );
-  console.log('Updated', path.basename(changelogFilename));
+  console.log('Updated', path.basename(defaultConfig.changelog));
 
-  await fs.writeFile(summaryFilename, getSummary(subscription));
-  console.log('Updated', path.basename(summaryFilename));
+  await fs.writeFile(defaultConfig.readme, getSummary(subscription));
+  console.log('Updated', path.basename(defaultConfig.readme));
 
-  await fs.writeFile(gkdFilename, JSON5.stringify(subscription));
-  console.log('Updated', path.basename(gkdFilename));
+  await fs.writeFile(defaultConfig.file, JSON5.stringify(subscription));
+  console.log('Updated', path.basename(defaultConfig.file));
 
   await fs.writeFile(
-    gkdVersionFilename,
+    defaultConfig.versionFile,
     JSON5.stringify({ id: subscription.id, version: subscription.version }),
   );
-  console.log('Updated', path.basename(gkdVersionFilename));
+  console.log('Updated', path.basename(defaultConfig.file));
 
   return true;
-};
+}

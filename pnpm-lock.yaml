@@ -84,8 +84,11 @@ importers:
         specifier: '*'
         version: 0.0.5
       '@gkd-kit/selector':
-        specifier: 0.0.25
-        version: 0.0.25
+        specifier: 0.2.2
+        version: 0.2.2
+      '@gkd-kit/wasm_matches':
+        specifier: 0.0.1
+        version: 0.0.1
       json5:
         specifier: '*'
         version: 2.2.3
@@ -430,6 +433,12 @@ packages:
 
   '@gkd-kit/selector@0.0.25':
     resolution: {integrity: sha512-bW3nFcvKZH5I/DasukPcKEbnSCrEI1ioup9+mUUTj0RoPwPBZri/MRKIu8fQg2WWfZ3D38otpwO1ilG7fJI/cA==}
+
+  '@gkd-kit/selector@0.2.2':
+    resolution: {integrity: sha512-tZ20wrGOL8zJF7CsJZbp5tGhsQEqPo+YkbASIrBaK/ey5OcUzWWwtNixsWc2StrdYZaqAwsvl6KRX5WE288N7A==}
+
+  '@gkd-kit/wasm_matches@0.0.1':
+    resolution: {integrity: sha512-PUYa98MXyumiIVuYHozbYThhPnYwrdvEwyL+tBmneonIq1Vm2CmeUfk3FbJXxaMQE2/3JBa7utfk0HAu/03xDQ==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -2362,6 +2371,10 @@ snapshots:
   '@gkd-kit/api@0.0.5': {}
 
   '@gkd-kit/selector@0.0.25': {}
+
+  '@gkd-kit/selector@0.2.2': {}
+
+  '@gkd-kit/wasm_matches@0.0.1': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:

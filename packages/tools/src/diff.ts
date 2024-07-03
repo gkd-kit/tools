@@ -368,7 +368,15 @@ export const getChangelog = (
   return nodeToStringList(node).join('\n') + '\n';
 };
 
+/**
+ * @deprecated use `getReadme` instead
+ */
 export const getSummary = (subscription: RawSubscription): string => {
+  console.warn('getSummary is deprecated, use getReadme instead');
+  return getReadme(subscription);
+};
+
+export const getReadme = (subscription: RawSubscription): string => {
   const categories = subscription.categories || [];
   const globalGroups = subscription.globalGroups || [];
   const apps = subscription.apps || [];

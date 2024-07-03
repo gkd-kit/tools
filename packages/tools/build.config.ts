@@ -5,4 +5,9 @@ export default defineBuildConfig({
   sourcemap: true,
   declaration: 'node16',
   externals: ['@gkd-kit/api', 'json5'],
+  rollup: {
+    esbuild: {
+      target: 'esnext',
+    },
+  },
 });

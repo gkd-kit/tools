@@ -1,58 +1,91 @@
-import { MultiplatformSelector } from '@gkd-kit/selector';
+import {
+  MultiplatformSelector,
+  initDefaultTypeInfo,
+  MismatchExpressionTypeException,
+  MismatchOperatorTypeException,
+  MismatchParamTypeException,
+  UnknownIdentifierException,
+  UnknownIdentifierMethodException,
+  UnknownMemberException,
+  UnknownMemberMethodException,
+  updateWasmToMatches,
+} from '@gkd-kit/selector';
+import matchesInstantiate from '@gkd-kit/wasm_matches';
+import fs from 'node:fs/promises';
+import url from 'node:url';
+
+let supportsMatches = false;
+const wasmUrl = import.meta.resolve('@gkd-kit/wasm_matches/dist/mod.wasm');
+const buffer = await fs.readFile(url.fileURLToPath(wasmUrl));
+try {
+  const mod = await matchesInstantiate(buffer);
+  // @ts-ignore
+  updateWasmToMatches(mod.exports.toMatches);
+  supportsMatches = true;
+} catch {
+  console.warn(
+    'Failed to instantiate wasm module, please update to nodejs@22. more info see https://gkd.li/selector/#regex-multiplatform',
+  );
+}
+
+const typeInfo = initDefaultTypeInfo();
+typeInfo.nodeType.props = typeInfo.nodeType.props.filter(
+  (p) => !p.name.startsWith('_'),
+);
+typeInfo.contextType.props = typeInfo.contextType.props.filter(
+  (p) => !p.name.startsWith('_'),
+);
+let logged = false;
 
 export const parseSelector = (source: string): MultiplatformSelector => {
   const ms = MultiplatformSelector.Companion.parse(source);
-  for (const { 0: name, 2: type } of ms.binaryExpressions) {
-    if (!allowPropertyNames.includes(name)) {
-      throw new Error(`Unknown property name ${name}`);
+  const useMatches = ms.binaryExpressions.some(
+    (exp) => exp.operator.value.key == '~=',
+  );
+  if (useMatches && !supportsMatches && !logged) {
+    logged = true;
+    console.warn(
+      'Matches operator is incomplete, please update to nodejs@22. more info see https://gkd.li/selector/#regex-multiplatform',
+    );
+  }
+  const error = ms.checkType(typeInfo.contextType);
+  if (error != null) {
+    if (error instanceof MismatchExpressionTypeException) {
+      throw new Error('不匹配表达式类型:' + error.exception.stringify(), {
+        cause: error,
+      });
     }
-    if (
-      type != PrimitiveValue.NullValue.type &&
-      allowPropertyTypes[name] != type
-    ) {
-      throw new Error(`Invalid property ${name} type ${type}`);
+    if (error instanceof MismatchOperatorTypeException) {
+      throw new Error('不匹配操作符类型:' + error.exception.stringify(), {
+        cause: error,
+      });
     }
+    if (error instanceof MismatchParamTypeException) {
+      throw new Error('不匹配参数类型:' + error.call.stringify(), {
+        cause: error,
+      });
+    }
+    if (error instanceof UnknownIdentifierException) {
+      throw new Error('未知属性:' + error.value.value, {
+        cause: error,
+      });
+    }
+    if (error instanceof UnknownIdentifierMethodException) {
+      throw new Error('未知方法:' + error.value.value, {
+        cause: error,
+      });
+    }
+    if (error instanceof UnknownMemberException) {
+      throw new Error('未知属性:' + error.value.property, {
+        cause: error,
+      });
+    }
+    if (error instanceof UnknownMemberMethodException) {
+      throw new Error('未知方法:' + error.value.property, {
+        cause: error,
+      });
+    }
+    throw new Error('未知错误:' + error, { cause: error });
   }
   return ms;
 };
-
-const PrimitiveValue = {
-  StringValue: { type: 'string' },
-  IntValue: { type: 'int' },
-  BooleanValue: { type: 'boolean' },
-  NullValue: { type: 'null' },
-};
-
-const allowPropertyTypes: Record<string, string> = /* #__PURE__ */ (() => ({
-  id: PrimitiveValue.StringValue.type,
-  vid: PrimitiveValue.StringValue.type,
-
-  name: PrimitiveValue.StringValue.type,
-  text: PrimitiveValue.StringValue.type,
-  'text.length': PrimitiveValue.IntValue.type,
-  desc: PrimitiveValue.StringValue.type,
-  'desc.length': PrimitiveValue.IntValue.type,
-
-  clickable: PrimitiveValue.BooleanValue.type,
-  focusable: PrimitiveValue.BooleanValue.type,
-  checkable: PrimitiveValue.BooleanValue.type,
-  checked: PrimitiveValue.BooleanValue.type,
-  editable: PrimitiveValue.BooleanValue.type,
-  longClickable: PrimitiveValue.BooleanValue.type,
-  visibleToUser: PrimitiveValue.BooleanValue.type,
-
-  left: PrimitiveValue.IntValue.type,
-  top: PrimitiveValue.IntValue.type,
-  right: PrimitiveValue.IntValue.type,
-  bottom: PrimitiveValue.IntValue.type,
-  width: PrimitiveValue.IntValue.type,
-  height: PrimitiveValue.IntValue.type,
-
-  index: PrimitiveValue.IntValue.type,
-  depth: PrimitiveValue.IntValue.type,
-  childCount: PrimitiveValue.IntValue.type,
-}))();
-
-const allowPropertyNames = /* #__PURE__ */ (() => {
-  return Object.keys(allowPropertyTypes);
-})();

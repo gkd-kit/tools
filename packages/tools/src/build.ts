@@ -2,7 +2,7 @@ import type { RawSubscription } from '@gkd-kit/api';
 import JSON5 from 'json5';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { getChangelog, getSummary } from './diff';
+import { getChangelog, getReadme } from './diff';
 import { isJsonEqual } from './equal';
 import { lazyConfig, resolveConfig } from './config';
 import type { GkdConfig } from './config';
@@ -46,7 +46,7 @@ export async function updateDist(
   );
   console.log('Updated', path.basename(defaultConfig.changelog));
 
-  await fs.writeFile(defaultConfig.readme, getSummary(subscription));
+  await fs.writeFile(defaultConfig.readme, getReadme(subscription));
   console.log('Updated', path.basename(defaultConfig.readme));
 
   await fs.writeFile(defaultConfig.file, JSON5.stringify(subscription));

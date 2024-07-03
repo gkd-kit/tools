@@ -1,7 +1,7 @@
 {
   "name": "@gkd-kit/tools",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "sideEffects": false,
@@ -16,7 +16,8 @@
     "build": "unbuild"
   },
   "dependencies": {
-    "@gkd-kit/selector": "0.0.25"
+    "@gkd-kit/selector": "0.2.2",
+    "@gkd-kit/wasm_matches": "0.0.1"
   },
   "peerDependencies": {
     "@gkd-kit/api": "*",

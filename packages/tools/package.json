@@ -16,7 +16,7 @@
     "build": "unbuild"
   },
   "dependencies": {
-    "@gkd-kit/selector": "0.2.2",
+    "@gkd-kit/selector": "0.3.3",
     "@gkd-kit/wasm_matches": "0.0.1"
   },
   "peerDependencies": {

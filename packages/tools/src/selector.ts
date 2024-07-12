@@ -1,9 +1,9 @@
 import {
-  MultiplatformSelector,
   initDefaultTypeInfo,
   MismatchExpressionTypeException,
   MismatchOperatorTypeException,
   MismatchParamTypeException,
+  Selector,
   UnknownIdentifierException,
   UnknownIdentifierMethodException,
   UnknownMemberException,
@@ -37,9 +37,9 @@ typeInfo.contextType.props = typeInfo.contextType.props.filter(
 );
 let logged = false;
 
-export const parseSelector = (source: string): MultiplatformSelector => {
-  const ms = MultiplatformSelector.Companion.parse(source);
-  const useMatches = ms.binaryExpressions.some(
+export const parseSelector = (source: string): Selector => {
+  const s = Selector.Companion.parse(source);
+  const useMatches = s.binaryExpressions.some(
     (exp) => exp.operator.value.key == '~=',
   );
   if (useMatches && !supportsMatches && !logged) {
@@ -48,7 +48,7 @@ export const parseSelector = (source: string): MultiplatformSelector => {
       'Matches operator is incomplete, please update to nodejs@22. more info see https://gkd.li/selector/#regex-multiplatform',
     );
   }
-  const error = ms.checkType(typeInfo.contextType);
+  const error = s.checkType(typeInfo.contextType);
   if (error != null) {
     if (error instanceof MismatchExpressionTypeException) {
       throw new Error('不匹配表达式类型:' + error.exception.stringify(), {
@@ -87,5 +87,5 @@ export const parseSelector = (source: string): MultiplatformSelector => {
     }
     throw new Error('未知错误:' + error, { cause: error });
   }
-  return ms;
+  return s;
 };

@@ -84,8 +84,8 @@ importers:
         specifier: '*'
         version: 0.0.5
       '@gkd-kit/selector':
-        specifier: 0.3.3
-        version: 0.3.3
+        specifier: 0.4.1
+        version: 0.4.1
       '@gkd-kit/wasm_matches':
         specifier: 0.0.1
         version: 0.0.1
@@ -574,6 +574,9 @@ packages:
 
   '@gkd-kit/selector@0.3.3':
     resolution: {integrity: sha512-iyUiYFbwAYJ6s6C0vRPMYPT/plxK9fQd9/lSd1wt1+f7UYzDInAvh900+4DqgUZrfPq4ysunomRS9FfXnCgX4w==}
+
+  '@gkd-kit/selector@0.4.1':
+    resolution: {integrity: sha512-3OxUl5jQpdZbf7zaVi0+hq2hLlCEmmPljowSIHk78Ko09hTQ7RQ/MAyybTVEUNNKT6Xgm6NxLCj+5shOBe7gbg==}
 
   '@gkd-kit/wasm_matches@0.0.1':
     resolution: {integrity: sha512-PUYa98MXyumiIVuYHozbYThhPnYwrdvEwyL+tBmneonIq1Vm2CmeUfk3FbJXxaMQE2/3JBa7utfk0HAu/03xDQ==}
@@ -2588,6 +2591,8 @@ snapshots:
   '@gkd-kit/api@0.2.2': {}
 
   '@gkd-kit/selector@0.3.3': {}
+
+  '@gkd-kit/selector@0.4.1': {}
 
   '@gkd-kit/wasm_matches@0.0.1': {}
 

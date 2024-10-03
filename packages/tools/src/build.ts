@@ -56,7 +56,7 @@ export async function updateDist(
     defaultConfig.versionFile,
     JSON5.stringify({ id: subscription.id, version: subscription.version }),
   );
-  console.log('Updated', path.basename(defaultConfig.file));
+  console.log('Updated', path.basename(defaultConfig.versionFile));
 
   return true;
 }

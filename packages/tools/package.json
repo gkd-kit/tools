@@ -1,7 +1,7 @@
 {
   "name": "@gkd-kit/tools",
   "type": "module",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "sideEffects": false,
@@ -13,7 +13,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "unbuild"
+    "build": "unbuild",
+    "postpublish": "curl -X PUT 'https://registry-direct.npmmirror.com/@gkd-kit/tools/sync'"
   },
   "dependencies": {
     "@gkd-kit/selector": "0.4.1",

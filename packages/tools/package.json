@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "unbuild",
-    "postpublish": "curl -X PUT 'https://registry-direct.npmmirror.com/@gkd-kit/tools/sync'"
+    "postpublish": "curl -X PUT https://registry-direct.npmmirror.com/@gkd-kit/tools/sync"
   },
   "dependencies": {
     "@gkd-kit/selector": "0.4.1",

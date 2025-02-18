@@ -1,13 +1,6 @@
 import {
   initDefaultTypeInfo,
-  MismatchExpressionTypeException,
-  MismatchOperatorTypeException,
-  MismatchParamTypeException,
   Selector,
-  UnknownIdentifierException,
-  UnknownIdentifierMethodException,
-  UnknownMemberException,
-  UnknownMemberMethodException,
   updateWasmToMatches,
 } from '@gkd-kit/selector';
 import matchesInstantiate from '@gkd-kit/wasm_matches';
@@ -19,8 +12,7 @@ const wasmUrl = import.meta.resolve('@gkd-kit/wasm_matches/dist/mod.wasm');
 const buffer = await fs.readFile(url.fileURLToPath(wasmUrl));
 try {
   const mod = await matchesInstantiate(buffer);
-  // @ts-ignore
-  updateWasmToMatches(mod.exports.toMatches);
+  updateWasmToMatches(mod.exports.toMatches as any);
   supportsMatches = true;
 } catch {
   console.warn(
@@ -38,54 +30,16 @@ typeInfo.contextType.props = typeInfo.contextType.props.filter(
 let logged = false;
 
 export const parseSelector = (source: string): Selector => {
-  const s = Selector.Companion.parse(source);
-  const useMatches = s.binaryExpressions.some(
-    (exp) => exp.operator.value.key == '~=',
-  );
+  const selector = Selector.Companion.parse(source);
+  const useMatches = selector.expression.binaryExpressionList
+    .asJsReadonlyArrayView()
+    .some((exp) => exp.operator.key == '~=');
   if (useMatches && !supportsMatches && !logged) {
     logged = true;
     console.warn(
       'Matches operator is incomplete, please update to nodejs@22. more info see https://gkd.li/selector/#regex-multiplatform',
     );
   }
-  const error = s.checkType(typeInfo.contextType);
-  if (error != null) {
-    if (error instanceof MismatchExpressionTypeException) {
-      throw new Error('不匹配表达式类型:' + error.exception.stringify(), {
-        cause: error,
-      });
-    }
-    if (error instanceof MismatchOperatorTypeException) {
-      throw new Error('不匹配操作符类型:' + error.exception.stringify(), {
-        cause: error,
-      });
-    }
-    if (error instanceof MismatchParamTypeException) {
-      throw new Error('不匹配参数类型:' + error.call.stringify(), {
-        cause: error,
-      });
-    }
-    if (error instanceof UnknownIdentifierException) {
-      throw new Error('未知属性:' + error.value.value, {
-        cause: error,
-      });
-    }
-    if (error instanceof UnknownIdentifierMethodException) {
-      throw new Error('未知方法:' + error.value.value, {
-        cause: error,
-      });
-    }
-    if (error instanceof UnknownMemberException) {
-      throw new Error('未知属性:' + error.value.property, {
-        cause: error,
-      });
-    }
-    if (error instanceof UnknownMemberMethodException) {
-      throw new Error('未知方法:' + error.value.property, {
-        cause: error,
-      });
-    }
-    throw new Error('未知错误:' + error, { cause: error });
-  }
-  return s;
+  selector.checkType(typeInfo.contextType);
+  return selector;
 };

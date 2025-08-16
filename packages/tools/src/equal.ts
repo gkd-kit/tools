@@ -1,5 +1,5 @@
-const isPrimitive = (v: any) => v === null || typeof v !== 'object';
-export const isJsonEqual = (a: any, b: any) => {
+const isPrimitive = (v: unknown) => v === null || typeof v !== 'object';
+export const isJsonEqual = (a: unknown, b: unknown) => {
   if (a === b) return true;
 
   if (Number.isNaN(a) && Number.isNaN(b)) return true;
@@ -19,10 +19,12 @@ export const isJsonEqual = (a: any, b: any) => {
     return false;
   }
 
-  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  const a1 = a as Record<string, unknown>;
+  const b1 = b as Record<string, unknown>;
+  const keys = new Set([...Object.keys(a1), ...Object.keys(b1)]);
   for (const key of keys) {
     // expect: {key: undefined} == {}
-    if (!isJsonEqual(a[key], b[key])) return false;
+    if (!isJsonEqual(a1[key], b1[key])) return false;
   }
   return true;
 };

@@ -160,7 +160,6 @@ const errorIfDuplicate = <T>(
   if (list.length <= 1) return;
   const indexes = getDuplicate(list, getKey);
   if (!indexes) return;
-  indexes;
   error(indexes);
 };
 const checkDuplicate = (subscription: RawSubscription) => {

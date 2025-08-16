@@ -3,6 +3,10 @@
   "private": true,
   "type": "module",
   "version": "0.0.0",
+  "scripts": {
+    "check": "tsx scripts/check.ts",
+    "build": "tsx scripts/build.ts"
+  },
   "dependencies": {
     "@gkd-kit/tools": "workspace:*",
     "@gkd-kit/define": "workspace:*"

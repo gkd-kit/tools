@@ -22,7 +22,7 @@ export type AppGroupDiffType = {
   groupDiff: DiffType<RawAppGroup>;
 };
 
-const isEmptyDiff = (diff: DiffType<any>): boolean => {
+const isEmptyDiff = (diff: DiffType<unknown>): boolean => {
   return (
     diff.added.length === 0 &&
     diff.changed.length === 0 &&

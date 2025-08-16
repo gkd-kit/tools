@@ -13,7 +13,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "unbuild"
+    "build": "unbuild",
+    "prepublish": "unbuild",
+    "postpublish": "curl -X PUT https://registry-direct.npmmirror.com/@gkd-kit/tools/sync"
   },
   "peerDependencies": {
     "@gkd-kit/api": "*"

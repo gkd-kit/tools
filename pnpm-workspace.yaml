@@ -1,3 +1,9 @@
+autoInstallPeers: false
+
 packages:
-  - 'packages/*'
-  - 'template'
+  - packages/*
+  - template
+
+onlyBuiltDependencies:
+  - esbuild
+  - simple-git-hooks

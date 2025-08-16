@@ -12,7 +12,9 @@ const wasmUrl = import.meta.resolve('@gkd-kit/wasm_matches/dist/mod.wasm');
 const buffer = await fs.readFile(url.fileURLToPath(wasmUrl));
 try {
   const mod = await matchesInstantiate(buffer);
-  updateWasmToMatches(mod.exports.toMatches as any);
+  updateWasmToMatches(
+    mod.exports.toMatches as Parameters<typeof updateWasmToMatches>[0],
+  );
   supportsMatches = true;
 } catch {
   console.warn(
@@ -21,12 +23,6 @@ try {
 }
 
 const typeInfo = initDefaultTypeInfo();
-typeInfo.nodeType.props = typeInfo.nodeType.props.filter(
-  (p) => !p.name.startsWith('_'),
-);
-typeInfo.contextType.props = typeInfo.contextType.props.filter(
-  (p) => !p.name.startsWith('_'),
-);
 let logged = false;
 
 export const parseSelector = (source: string): Selector => {
